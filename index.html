@@ -904,7 +904,7 @@
             } catch (error) { console.error(error); }
         }
         
-        async function fetchLoop() { await fetchFromCloud(); setTimeout(fetchLoop, 1000); }
+        async function fetchLoop() { await fetchFromCloud(); setTimeout(fetchLoop, 4000); }
         checkTwitchAuth(); fetchLoop();
 
         let lastLogDataString = "";
