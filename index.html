@@ -788,6 +788,7 @@
 
         let lastProcessedSpinTime = 0; let isSpinning = false; let isFirstLoad = true; let currentConfig = null; let wheelTimeout = null;
         let lastConfigFetch = 0; let lastGlobalUsersFetch = 0; let cachedGlobalUsers = {};
+        let refreshTimer = null; let fallbackRefreshTimer = null; let firebaseStreamsStarted = false;
 
         function escapeHtml(value) {
             return String(value == null ? '' : value)
@@ -816,6 +817,31 @@
                 });
             });
             return template.innerHTML;
+        }
+
+        function scheduleCloudRefresh() {
+            if (refreshTimer) return;
+            refreshTimer = setTimeout(async () => {
+                refreshTimer = null;
+                await fetchFromCloud();
+            }, 250);
+        }
+
+        function startFirebaseStreams() {
+            if (firebaseStreamsStarted || typeof EventSource === 'undefined') return;
+            firebaseStreamsStarted = true;
+            [firebaseUrl, configUrl, firebaseUrlGlobal].forEach(url => {
+                const source = new EventSource(url);
+                source.addEventListener('put', scheduleCloudRefresh);
+                source.addEventListener('patch', scheduleCloudRefresh);
+                source.addEventListener('cancel', () => {
+                    console.error('Firebase stream cancelled:', url);
+                    scheduleCloudRefresh();
+                });
+                source.onerror = () => {
+                    console.error('Firebase stream disconnected:', url);
+                };
+            });
         }
 
         async function fetchFromCloud() {
@@ -890,7 +916,12 @@
             } catch (error) { console.error(error); }
         }
         
-        async function fetchLoop() { await fetchFromCloud(); setTimeout(fetchLoop, 4000); }
+        async function fetchLoop() {
+            await fetchFromCloud();
+            startFirebaseStreams();
+            if (fallbackRefreshTimer) clearTimeout(fallbackRefreshTimer);
+            fallbackRefreshTimer = setTimeout(fetchLoop, typeof EventSource === 'undefined' ? 4000 : 300000);
+        }
         checkTwitchAuth(); fetchLoop();
 
         let lastLogDataString = "";
