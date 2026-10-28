@@ -785,7 +785,12 @@
                 freeUsed = parseInt(player.spins_free_used || player.free_used || 0);
 
                 if (player.active_mech) {
-                    loadedSpell = { mech: player.active_mech, name: player.active_name || 'Магия', icon: player.active_icon || '✨', target: player.active_target || 'self' };
+                    const activeName = typeof player.active_name === 'string' ? player.active_name : '';
+                    const activeValue = Number(player.active_value) || 0;
+                    const readableName = activeName && !/[�]{1,}|\?{2,}/.test(activeName)
+                        ? activeName
+                        : (activeValue > 0 ? `+${activeValue} билетов` : 'Билетный предмет');
+                    loadedSpell = { mech: player.active_mech, name: readableName, icon: player.active_icon || '🎟', target: player.active_target || 'self' };
                     let hintText = 'Нажми сюда, чтобы применить!';
                     if (targetingMode && targetingState !== 'gold' && targetingState !== 'ticket') {
                         if (targetingState === 'step2') hintText = 'ШАГ 2: Выбери лот ЦЕЛИ'; 
