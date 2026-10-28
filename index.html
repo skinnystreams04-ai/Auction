@@ -82,7 +82,9 @@
         /* ЛЕВАЯ ПАНЕЛЬ И СЕТКА ЛОТОВ */
         .left-container { flex: 1; display: flex; flex-direction: column; height: 100%; position: relative; min-width: 580px;}
         .phase-bar { position: relative; display: flex; align-items: center; justify-content: center; padding-bottom: 12px; background: #0b0d0a; z-index: 20; width: 100%; flex-shrink: 0; border-bottom: 2px solid #283325;}
-        .phase-indicator { background: linear-gradient(90deg, rgba(18,22,18,0.95) 0%, rgba(10,13,10,0.95) 100%); border: 2px solid #4a5c41; padding: 6px 25px; border-radius: 8px; font-size: 18px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 10px rgba(0,0,0,0.6); display: inline-flex; align-items: center; gap: 8px; z-index: 2;}
+        .phase-indicator { background: linear-gradient(90deg, rgba(18,22,18,0.95) 0%, rgba(10,13,10,0.95) 100%); border: 2px solid #4a5c41; padding: 6px 25px; border-radius: 8px; font-size: 18px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 12px rgba(0,0,0,0.6); display: inline-flex; align-items: center; gap: 8px; z-index: 2; }
+        .phase-indicator.active { color: #a6e3a1; border-color: #8abf86; }
+        .phase-indicator.closed { color: #eba0a0; border-color: #c45c5c; }
         .phase-indicator.p1 { border-color: #8abf86; color: #8abf86; text-shadow: 0 0 10px rgba(138, 191, 134, 0.3); }
         .phase-indicator.p2 { border-color: #b8a87b; color: #b8a87b; text-shadow: 0 0 10px rgba(184, 168, 123, 0.3); }
         .top-nav-btn { background: #121612; border: 1px solid #283325; color: #a4b09c; padding: 6px 15px; border-radius: 6px; font-family: 'Neucha', cursive; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 2; position: absolute; left: 0; top: 0;}
@@ -271,23 +273,17 @@
         <div class="rules-content">
             <button class="rules-close-btn" onclick="closeRulesModal()">✖</button>
             <div class="modal-nav">
-                <button class="modal-nav-btn active" onclick="switchModalView('rules', this)">📖 Правила</button>
-                <button class="modal-nav-btn" onclick="switchModalView('effects', this)">🔮 Словарь Эффектов</button>
+                <button class="modal-nav-btn active" onclick="switchModalView('rules', this)">Правила</button>
             </div>
             <div id="modal-view-rules" class="modal-view active">
                 <div class="rules-text">
-                    <div class="rules-section-title">🎬 ДВЕ ФАЗЫ АУКЦИОНА</div>
-                    <ul>
-                        <li><b>🟡 ФАЗА 1 «Ясный день»:</b> Открыто добавление новых игр и <i>Колесо Баффов</i>. Можно добавлять лоты и увеличивать количество билетов.</li>
-                        <li><b>🌑 ФАЗА 2 «Солнечное затмение»:</b> <b>ДОБАВЛЕНИЕ НОВЫХ ИГР ЗАКРЫТО.</b> Открывается <i>Колесо Дебаффов</i>. Разрешено атаковать чужие лоты (воровство, налоги, яды).</li>
-                    </ul>
-
-                    <div class="rules-section-title">🎮 КАК УЧАСТВОВАТЬ</div>
+                    <div class="rules-section-title">🎬 КАК УЧАСТВОВАТЬ</div>
                     <ul>
                         <li><b>Добавление лотов:</b> В наградах канала можно добавить до <span id="rule-max-games" class="eff-badge">3</span> игр (указываются через запятую в одном сообщении).</li>
                         <li><b>🎟️ Обычные билеты:</b> Чтобы получить, купи награду <b>«Пополнить баланс»</b> за баллы канала на Твиче. После этого они появятся в твоем профиле на сайте. Лимиты зависят от роли (см. ниже).</li>
                         <li><b>🎫 Золотые билеты (Донат / Сабка):</b> <b>ЛИМИТОВ НЕТ!</b> 2 грн = 1 Золотой билет. Чтобы золото зачислилось, донать <b>СТРОГО под своим точным ником с Твича</b>. Также золото дается за покупку Сабки на канале.</li>
-                        <li><b>Магия и защита:</b> Эффекты применяются по номеру лота (например: <code>!каст 1</code>). Дебаффы (кроме Смерти) не опускают билеты ниже 1. В магазине за баллы доступны <span class="eff-badge shield">🛡️ Щит</span> и 🧴 Очищение.</li>
+                        <li><b>🎟️ Колесо билетов:</b> бесплатная крутка выдаёт один билетный предмет в инвентарь. Нажми на предмет, выбери свой лот и подтверди применение.</li>
+                        <li><b>Завершение:</b> после закрытия аукциона новые лоты и ставки больше не принимаются.</li>
                     </ul>
 
                     <div class="rules-section-title">👑 ПРИВИЛЕГИИ И ЛИМИТЫ</div>
@@ -297,19 +293,10 @@
                     <ul>
                         <li>Золотые билеты — это премиум валюта. Курс: <b>2 гривны = 1 Золотой билет</b>.</li>
                         <li><b>Twitch Сабки:</b> Учитываются по курсу: 1 сабка = 43 грн = <b>22 Золотых билета</b>.</li>
-                        <li><b>50 Золотых билетов (100 грн) = БЕССМЕРТИЕ:</b> Игру невозможно удалить или уничтожить дебаффом "Килл".</li>
-                        <li><b>100 Золотых билетов (200 грн) = НЕУЯЗВИМОСТЬ:</b> Игра становится иммунной к ЛЮБЫМ негативным эффектам и налогам из колеса. Очищает все проклятия.</li>
+                        <li><b>50 Золотых билетов:</b> лот получает особый золотой статус.</li>
+                        <li><b>100 Золотых билетов:</b> лот получает усиленный золотой статус.</li>
                         <li><b>Гарантия игры:</b> Если на победивший лот задоначена любая сумма (есть хотя бы 1 Золотой билет), я обязан играть в эту игру <b>минимум 1 аукционный день</b>.</li>
                     </ul>
-                </div>
-            </div>
-            <div id="modal-view-effects" class="modal-view">
-                <div class="rules-text">
-                    <p style="text-align: center; color: #8abf86; margin-bottom: 0;">Здесь собраны все актуальные эффекты, которые могут выпасть на рулетке.</p>
-                    <div class="rules-section-title" style="color: #8abf86;">🟢 БАФФЫ</div>
-                    <div class="dict-grid" id="dict-render-buffs">Загрузка...</div>
-                    <div class="rules-section-title" style="color: #c45c5c; margin-top: 30px;">🔴 ДЕБАФФЫ</div>
-                    <div class="dict-grid" id="dict-render-debuffs">Загрузка...</div>
                 </div>
             </div>
         </div>
@@ -331,7 +318,7 @@
                     <button class="top-nav-btn left-btn" onclick="openModalTab('rules')" style="color: #b8a87b; border-color: #8c7b52; display: flex; align-items: center; gap: 5px; justify-content: center;">
                         <img src="https://skinnystreams04-ai.github.io/Auction/icons/BILET_GOLD.png" class="custom-icon" style="width: 18px; height: 18px;"> Правила / Эффекты
                     </button>
-                    <div id="phase-indicator" class="phase-indicator p2">🟡 ФАЗА 1: ЯСНЫЙ ДЕНЬ</div>
+                    <div id="phase-indicator" class="phase-indicator">ПРОВЕРКА СТАТУСА АУКЦИОНА...</div>
                 </div>
                 <div class="left-panel" id="players-grid"></div>
             </div>
@@ -403,14 +390,10 @@
                                         <div style="color: #8abf86; font-weight: bold; margin-bottom: 3px; border-bottom: 1px solid #283325; padding-bottom: 4px;">Лимиты на стрим:</div>
                                         <div class="limit-row"><span>Куплено билетов:</span> <span class="limit-val" id="lim-tix">0 / 0</span></div>
                                         <div class="limit-row"><span>Использовано беспл. колес:</span> <span class="limit-val" style="color: #b0b8a8;" id="lim-free">0 / 0</span></div>
-                                        <div class="limit-row"><span>Использовано баффов:</span> <span class="limit-val" id="lim-buff">0 / 0</span></div>
-                                        <div class="limit-row"><span>Использовано дебаффов:</span> <span class="limit-val" style="color: #c45c5c;" id="lim-debuff">0 / 0</span></div>
                                     </div>
 
                                     <div class="spin-actions">
-                                        <button class="spin-btn free" onclick="sendTwitchCommand('!колесо фри')">⚪ КРУТИТЬ БЕСПЛАТНОЕ</button>
-                                        <button class="spin-btn buff" onclick="sendTwitchCommand('!колесо бафф')">🟢 КРУТИТЬ БАФФ</button>
-                                        <button class="spin-btn debuff" onclick="sendTwitchCommand('!колесо дебафф')">🔴 КРУТИТЬ ДЕБАФФ</button>
+                                        <button class="spin-btn free" id="ticket-wheel-button" onclick="sendTwitchCommand('!колесо фри')">КРУТИТЬ КОЛЕСО БИЛЕТОВ</button>
                                     </div>
                                 </div>
                             </div>
@@ -509,10 +492,12 @@
         document.querySelectorAll('.collapse-btn').forEach(btn => { btn.addEventListener('click', (e) => { e.target.closest('.widget-base').classList.toggle('collapsed'); }); });
 
         function openModalTab(tabId) {
-            document.getElementById('rules-modal').classList.add('show'); renderDictionaryUI(); renderRulesUI(); 
-            document.querySelectorAll('.modal-nav-btn').forEach(b => b.classList.remove('active')); document.querySelectorAll('.modal-view').forEach(v => v.classList.remove('active'));
-            if (tabId === 'rules') { document.querySelector('.modal-nav-btn:nth-child(1)').classList.add('active'); document.getElementById('modal-view-rules').classList.add('active'); } 
-            else { document.querySelector('.modal-nav-btn:nth-child(2)').classList.add('active'); document.getElementById('modal-view-effects').classList.add('active'); }
+            document.getElementById('rules-modal').classList.add('show');
+            renderRulesUI();
+            document.querySelectorAll('.modal-nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.modal-view').forEach(v => v.classList.remove('active'));
+            document.querySelector('.modal-nav-btn').classList.add('active');
+            document.getElementById('modal-view-rules').classList.add('active');
         }
         function switchModalView(viewId, btn) {
             document.querySelectorAll('.modal-nav-btn').forEach(b => b.classList.remove('active')); document.querySelectorAll('.modal-view').forEach(v => v.classList.remove('active'));
@@ -521,22 +506,6 @@
         function closeRulesModal() { document.getElementById('rules-modal').classList.remove('show'); }
         document.getElementById('rules-modal').addEventListener('click', function(e) { if (e.target === this) closeRulesModal(); });
 
-        const mechDescriptions = {
-            'add_tickets': 'Моментально добавляет указанное число билетов.',
-            'add_all': 'Добавляет билеты сразу всем твоим живым лотам.',
-            'multiply': 'Умножает текущие билеты лота.',
-            'cleanse': 'Снимает 1 любой негативный статус (Яд, Кислота и т.д.).',
-            'sub_tickets': 'Срезает билеты у врага (но не ниже 1). Бьется об Щит.',
-            'divide': 'Делит билеты врага (но не ниже 1). Бьется об Щит.',
-            'steal': 'Забирает билеты у врага в твою пользу (оставляя ему минимум 1).',
-            'swap': 'Полностью меняет местами билеты твоего лота и вражеского.',
-            'tax': 'Глобальный налог: отнимает билеты у ВСЕХ игр на Алтаре (пробивает обычные щиты).',
-            'emp': 'Уничтожает абсолютно все щиты на выбранном лоте.',
-            'poison_tickets': 'Отравляет лот. Сжигает билеты по таймеру (до 1), пока не купят Очищение. Игнорирует щиты.',
-            'acid_shield': 'Разъедает броню. Ломает щиты по таймеру, пока не купят Очищение. Игнорирует щиты.',
-            'status': 'Вешает на лот статус (Защита, Заморозка или мгновенная Смерть).'
-        };
-
         function renderRulesUI() {
             if(!currentConfig) return;
             const gl = currentConfig.global_limits || {}; const lim = currentConfig.limits || {};
@@ -544,27 +513,11 @@
             const limitsList = document.getElementById('dynamic-limits-list');
             if(limitsList) {
                 limitsList.innerHTML = `
-                    <li><span class="eff-badge" style="background:#222b20; border-color:#32422f;">F</span> <b>ФОЛЛОВЕР:</b> Макс <b>${gl.follower ?? 0}</b> билетов за баллы. Колеса: <b>${lim.f_free ?? 0}</b> беспл, <b>${lim.f_buffs ?? 0}</b> бафф, <b>${lim.f_debuffs ?? 0}</b> дебафф.</li>
-                    <li><span class="eff-badge vip-badge">VIP</span> <b>VIP:</b> Макс <b>${gl.vip ?? 0}</b> билетов за баллы. Колеса: <b>${lim.vip_free ?? 0}</b> беспл, <b>${lim.vip_buffs ?? 0}</b> бафф, <b>${lim.vip_debuffs ?? 0}</b> дебафф.</li>
-                    <li><span class="eff-badge sub-badge">SUB</span> <b>SUB:</b> Макс <b>${gl.sub ?? 0}</b> билетов за баллы. Колеса: <b>${lim.sub_free ?? 0}</b> беспл, <b>${lim.sub_buffs ?? 0}</b> бафф, <b>${lim.sub_debuffs ?? 0}</b> дебафф.</li>
+                    <li><span class="eff-badge" style="background:#222b20; border-color:#32422f;">F</span> <b>ФОЛЛОВЕР:</b> Макс <b>${gl.follower ?? 0}</b> билетов за баллы. Бесплатных колёс: <b>${lim.f_free ?? 0}</b>.</li>
+                    <li><span class="eff-badge vip-badge">VIP</span> <b>VIP:</b> Макс <b>${gl.vip ?? 0}</b> билетов за баллы. Бесплатных колёс: <b>${lim.vip_free ?? 0}</b>.</li>
+                    <li><span class="eff-badge sub-badge">SUB</span> <b>SUB:</b> Макс <b>${gl.sub ?? 0}</b> билетов за баллы. Бесплатных колёс: <b>${lim.sub_free ?? 0}</b>.</li>
                 `;
             }
-        }
-
-        function renderDictionaryUI() {
-            if(!currentConfig || !currentConfig.dictionary) return;
-            const baseUrl = "https://skinnystreams04-ai.github.io/Auction/icons/";
-            const renderGrid = (arr, containerId, cssClass) => {
-                const container = document.getElementById(containerId); let html = "";
-                if(!arr || arr.length === 0) { container.innerHTML = "<p>Пусто</p>"; return; }
-                arr.forEach(eff => {
-                    let desc = mechDescriptions[eff.mech] || "Уникальная магия Скинволкера.";
-                    let imgTag = `<img src="${baseUrl}${eff.id}.png" class="custom-icon" style="width:36px; height:36px; vertical-align:middle;" onerror="this.outerHTML='${eff.icon}'">`;
-                    html += `<div class="dict-item ${cssClass}"><div class="dict-icon">${imgTag}</div><div class="dict-info"><h4>${eff.name}</h4><p>${desc}</p></div></div>`;
-                });
-                container.innerHTML = html;
-            };
-            renderGrid(currentConfig.dictionary.buffs, 'dict-render-buffs', 'buff'); renderGrid(currentConfig.dictionary.debuffs, 'dict-render-debuffs', 'debuff');
         }
 
         // 🔥 TWITCH АВТОРИЗАЦИЯ & ИНТЕРАКТИВ 🔥
@@ -646,13 +599,10 @@
             if (targetingMode) {
                 invEl.classList.add('active');
                 document.getElementById('cancel-banner').style.display = 'block';
-                if (loadedSpell.mech === 'steal' || loadedSpell.mech === 'swap') {
-                    targetingState = 'step1'; document.body.className = 'targeting-self'; hintEl.innerText = "ШАГ 1: Выбери СВОЙ лот"; showToast('РЕЖИМ ОБМЕНА: Сначала выбери свой лот!');
-                } else if (loadedSpell.target === 'self') {
-                    targetingState = 'single'; document.body.className = 'targeting-self'; hintEl.innerText = "Выбери СВОЙ лот"; showToast('МАГИЯ: Выбери свой лот для баффа!');
-                } else {
-                    targetingState = 'single'; document.body.className = 'targeting-any'; hintEl.innerText = "Выбери ЛЮБОЙ лот (цель)"; showToast('МАГИЯ: Выбери любой лот (даже свой)!');
-                }
+                targetingState = 'single';
+                document.body.className = 'targeting-self';
+                hintEl.innerText = "Выбери СВОЙ лот";
+                showToast('Выбери свой лот для применения билетного предмета!');
             } else { resetTargetingUI(); }
         }
 
@@ -685,16 +635,13 @@
                 sendTwitchCommand(`!билет ${amount} ${slotIndex}`); resetTargetingUI(); return;
             }
 
-            // ОБРАБОТКА МАГИИ ИЗ РУЛЕТКИ
             if (!loadedSpell) return;
-            if (targetingState === 'step1') {
-                firstTarget = { slot: slotIndex }; targetingState = 'step2'; document.body.className = 'targeting-any';
-                document.getElementById('inv-hint').innerText = "ШАГ 2: Выбери лот ЦЕЛИ"; showToast('Отлично! Теперь выбери лот врага (цели).'); return;
+            if (ownerLogin.toLowerCase() !== window.currentUserLogin.toLowerCase()) {
+                showToast('Билетный предмет можно применить только к своему лоту.', true);
+                return;
             }
-            let cmd = "";
-            if (targetingState === 'step2') { cmd = `!каст ${firstTarget.slot} @${ownerLogin} ${slotIndex}`; } 
-            else { if (loadedSpell.target === 'self') cmd = `!каст ${slotIndex}`; else cmd = `!каст ${slotIndex} @${ownerLogin}`; }
-            sendTwitchCommand(cmd); resetTargetingUI();
+            sendTwitchCommand(`!каст ${slotIndex}`);
+            resetTargetingUI();
         }
 
         async function checkTwitchAuth() {
@@ -790,13 +737,10 @@
                     const readableName = activeName && !/[�]{1,}|\?{2,}/.test(activeName)
                         ? activeName
                         : (activeValue > 0 ? `+${activeValue} билетов` : 'Билетный предмет');
-                    loadedSpell = { mech: player.active_mech, name: readableName, icon: player.active_icon || '🎟', target: player.active_target || 'self' };
+                    loadedSpell = { mech: 'add_tickets', name: readableName, icon: player.active_icon || '🎟', target: 'self' };
                     let hintText = 'Нажми сюда, чтобы применить!';
                     if (targetingMode && targetingState !== 'gold' && targetingState !== 'ticket') {
-                        if (targetingState === 'step2') hintText = 'ШАГ 2: Выбери лот ЦЕЛИ'; 
-                        else if (targetingState === 'step1') hintText = 'ШАГ 1: Выбери СВОЙ лот'; 
-                        else if (loadedSpell.target === 'self') hintText = 'Выбери СВОЙ лот'; 
-                        else hintText = 'Выбери ЛЮБОЙ лот (цель)';
+                        hintText = 'Выбери СВОЙ лот';
                     }
                     invCount.innerText = "1 / 1";
                     invContent.innerHTML = `<div id="inv-spell-content" class="inv-spell ${targetingMode && targetingState !== 'gold' && targetingState !== 'ticket' ? 'active' : ''}" onclick="toggleTargeting()"><div class="inv-icon-name">${loadedSpell.icon} ${loadedSpell.name}</div><div id="inv-hint" class="inv-hint">${hintText}</div></div>`;
@@ -826,15 +770,13 @@
 
             if (currentConfig) {
                 const gl = currentConfig.global_limits || {}; const lim = currentConfig.limits || {};
-                let maxTickets = gl.follower ?? 10; let maxBuffs = lim.f_buffs ?? 0; let maxDebuffs = lim.f_debuffs ?? 0; let maxFree = lim.f_free ?? 0;
+                let maxTickets = gl.follower ?? 10; let maxFree = lim.f_free ?? 0;
 
-                if (role === 'VIP') { maxTickets = gl.vip ?? 25; maxBuffs = lim.vip_buffs ?? 0; maxDebuffs = lim.vip_debuffs ?? 0; maxFree = lim.vip_free ?? 0; } 
-                else if (role === 'SUB') { maxTickets = gl.sub ?? 50; maxBuffs = lim.sub_buffs ?? 0; maxDebuffs = lim.sub_debuffs ?? 0; maxFree = lim.sub_free ?? 0; }
+                if (role === 'VIP') { maxTickets = gl.vip ?? 25; maxFree = lim.vip_free ?? 0; } 
+                else if (role === 'SUB') { maxTickets = gl.sub ?? 50; maxFree = lim.sub_free ?? 0; }
 
                 document.getElementById('lim-tix').innerText = `${ticketsBought} / ${maxTickets}`;
                 document.getElementById('lim-free').innerText = `${freeUsed} / ${maxFree}`;
-                document.getElementById('lim-buff').innerText = `${buffsUsed} / ${maxBuffs}`;
-                document.getElementById('lim-debuff').innerText = `${debuffsUsed} / ${maxDebuffs}`;
             }
         }
 
@@ -843,20 +785,36 @@
         const firebaseUrl = "https://skinwalkerauction-default-rtdb.europe-west1.firebasedatabase.app/auction_data.json";
         const configUrl = "https://skinwalkerauction-default-rtdb.europe-west1.firebasedatabase.app/auction_config.json";
 
-        let dictionaryMap = {}; let lastProcessedSpinTime = 0; let isSpinning = false; let isFirstLoad = true; let currentConfig = null; let wheelTimeout = null;
+        let lastProcessedSpinTime = 0; let isSpinning = false; let isFirstLoad = true; let currentConfig = null; let wheelTimeout = null;
+        let lastConfigFetch = 0; let lastGlobalUsersFetch = 0; let cachedGlobalUsers = {};
+
+        function escapeHtml(value) {
+            return String(value == null ? '' : value)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
 
         async function fetchFromCloud() {
             try {
-                // Скачиваем сразу три базы
-                const [dataRes, confRes, globalRes] = await Promise.all([ 
-                    fetch(firebaseUrl + "?nocache=" + new Date().getTime()), 
-                    fetch(configUrl + "?nocache=" + new Date().getTime()),
-                    fetch(firebaseUrlGlobal + "?nocache=" + new Date().getTime())
-                ]);
+                const now = Date.now();
+                const requests = [fetch(firebaseUrl + "?nocache=" + now)];
+                const configIndex = requests.length;
+                if (!currentConfig || now - lastConfigFetch >= 30000) requests.push(fetch(configUrl + "?nocache=" + now));
+                const globalIndex = requests.length;
+                if (now - lastGlobalUsersFetch >= 30000) requests.push(fetch(firebaseUrlGlobal + "?nocache=" + now));
                 
-                const data = await dataRes.json(); 
-                currentConfig = await confRes.json();
-                const globalUsers = await globalRes.json() || {};
+                const responses = await Promise.all(requests);
+                const data = await responses[0].json();
+                if (responses[configIndex]) {
+                    currentConfig = await responses[configIndex].json();
+                    lastConfigFetch = now;
+                }
+                if (responses[globalIndex]) {
+                    cachedGlobalUsers = await responses[globalIndex].json() || {};
+                    lastGlobalUsersFetch = now;
+                }
+                const globalUsers = cachedGlobalUsers;
 
                 // 🔥 СКЛЕИВАЕМ БАЗЫ ДЛЯ ТАБЛИЦЫ ЛОТОВ (Раздаем роли) 🔥
                 if (data && data.players) {
@@ -874,20 +832,20 @@
                 window.globalUsersData = globalUsers;
                 renderWallet(data, globalUsers); 
 
-                if (data && data.current_phase) {
+                if (data) {
                     const phaseInd = document.getElementById('phase-indicator');
-                    if (data.current_phase === 1) { phaseInd.className = 'phase-indicator p2'; phaseInd.innerHTML = '🟡 ФАЗА 1: ЯСНЫЙ ДЕНЬ'; } 
-                    else if (data.current_phase === 2) { phaseInd.className = 'phase-indicator p3'; phaseInd.innerHTML = '🌑 ФАЗА 2: ЗАТМЕНИЕ'; } 
-                    else { phaseInd.className = 'phase-indicator'; phaseInd.innerHTML = 'ОЖИДАНИЕ СТАРТА'; }
+                    const auctionIsActive = data.auction_active === true ||
+                        (data.auction_active == null && data.current_phase !== 0);
+                    phaseInd.className = 'phase-indicator ' + (auctionIsActive ? 'active' : 'closed');
+                    phaseInd.innerHTML = auctionIsActive ? 'АУКЦИОН ОТКРЫТ' : 'АУКЦИОН ЗАВЕРШЁН';
+                    const wheelButton = document.getElementById('ticket-wheel-button');
+                    if (wheelButton) {
+                        wheelButton.disabled = !auctionIsActive;
+                        wheelButton.title = auctionIsActive ? '' : 'Аукцион завершён';
+                    }
                 }
 
-                if (currentConfig && currentConfig.dictionary) {
-                    dictionaryMap = {};
-                    if (currentConfig.dictionary.buffs) currentConfig.dictionary.buffs.forEach(e => dictionaryMap[e.id] = e);
-                    if (currentConfig.dictionary.debuffs) currentConfig.dictionary.debuffs.forEach(e => dictionaryMap[e.id] = e);
-                }
-
-                if (data && data.players) { try { drawSlots(data.players); } catch (e) {} } 
+                if (data && data.players) { try { drawSlots(data.players); } catch (e) { console.error('Ошибка отрисовки лотов:', e); } } 
                 else { playersGrid.innerHTML = "<h2 style='color: #4a5c41; text-align: center; width: 100%; margin-top: 30px;'>Алтарь пуст... Ждем жертв.</h2>"; cauldronList.innerHTML = ""; }
                 
                 if (data && data.log) { drawLog(data.log); } 
@@ -917,7 +875,7 @@
             const currentLogString = JSON.stringify(logArray); if (lastLogDataString === currentLogString) return; lastLogDataString = currentLogString;
             const logList = document.getElementById('action-log-list');
             let htmlAll = '';
-            logArray.forEach(entry => { htmlAll += `<div class="log-entry"><span class="time">[${entry.time}]</span> ${entry.text}</div>`; });
+            logArray.forEach(entry => { htmlAll += `<div class="log-entry"><span class="time">[${escapeHtml(entry.time)}]</span> ${escapeHtml(entry.text)}</div>`; });
             logList.innerHTML = htmlAll || '<div style="text-align: center; padding: 20px; color: #6c7086; font-style: italic;">Аукцион запущен. Ждем первых действий...</div>';
         }
 
@@ -926,7 +884,7 @@
             const currentString = JSON.stringify(logArray); if (lastFinanceLogString === currentString) return; lastFinanceLogString = currentString;
             const list = document.getElementById('action-finance-list');
             let html = '';
-            logArray.forEach(entry => { html += `<div class="log-entry"><span class="time">[${entry.time}]</span> ${entry.text}</div>`; });
+            logArray.forEach(entry => { html += `<div class="log-entry"><span class="time">[${escapeHtml(entry.time)}]</span> ${escapeHtml(entry.text)}</div>`; });
             list.innerHTML = html || '<div style="text-align: center; padding: 20px; color: #b8a87b; font-style: italic;">История золота пуста...</div>';
         }
 
@@ -952,7 +910,6 @@
                     let t = parseInt(game.tickets) || 0; let g = parseInt(game.gold) || 0;
                     if (!globalCauldron[upperName]) globalCauldron[upperName] = { tickets: 0, gold: 0, rawName: safeName, badges: [] };
                     globalCauldron[upperName].tickets += t; globalCauldron[upperName].gold += g; 
-                    if(game.badges) { let bArr = Array.isArray(game.badges) ? game.badges : Object.values(game.badges); globalCauldron[upperName].badges.push(...bArr); }
                     playerTotalTickets += (t + g); 
                 });
                 player.totalTickets = playerTotalTickets; if (localGameCount > globalMaxGames) globalMaxGames = localGameCount; 
@@ -972,27 +929,13 @@
                     slotIndex++; let safeName = game.name != null ? String(game.name) : "Без названия"; let upperName = safeName.toUpperCase(); let globalGold = globalCauldron[upperName].gold;
                     let itemClass = ""; let globalBadge = "";
                     let isMineClass = (player.user && window.currentUserLogin && player.user.toLowerCase() === window.currentUserLogin.toLowerCase()) ? 'is-mine' : '';
-                    if (globalGold >= 100) { itemClass = "absolute-slot"; globalBadge = `<div class="badge absolute" title="Неуязвимость">🛡️</div>`; } 
-                    else if (globalGold >= 50) { itemClass = "immortal-slot"; globalBadge = `<div class="badge immortal" title="Бессмертие">💀</div>`; }
+                    if (globalGold >= 100) { itemClass = "absolute-slot"; globalBadge = `<div class="badge absolute" title="Золотой статус">GOLD+</div>`; } 
+                    else if (globalGold >= 50) { itemClass = "immortal-slot"; globalBadge = `<div class="badge immortal" title="Золотой статус">GOLD</div>`; }
 
-                    let badgesArr = Array.isArray(game.badges) ? game.badges : Object.values(game.badges || {}); let badgeCounts = {};
-                    badgesArr.forEach(b => { if (!b || !b.type) return; badgeCounts[b.type] = (badgeCounts[b.type] || 0) + 1; });
-                    let localBadges = Object.keys(badgeCounts).map(type => {
-                        let count = badgeCounts[type]; let iconText = ""; let titleText = "";
-                        if (dictionaryMap[type]) { iconText = `${dictionaryMap[type].icon}`; titleText = dictionaryMap[type].name; } 
-                        else {
-                            if(type === 'shield') iconText = "🛡️"; else if(type === 'fire') iconText = "🔥";
-                            else if(type === 'freeze') iconText = "❄️"; else if(type === 'kill') iconText = "💀";
-                            else if(type === 'poison') iconText = "☠️"; else if(type === 'acid') iconText = "🧪";
-                            else { iconText = `✨`; titleText = type; }
-                        }
-                        let imgUrl = `${baseUrl}${type}.png`; let imgTag = "";
-                        if(window.failedImages[imgUrl]) { imgTag = iconText; } else { imgTag = `<img src="${imgUrl}" class="custom-icon" onerror="window.failedImages['${imgUrl}']=true; this.outerHTML='${iconText}'">`; }
-                        return `<div class="badge ${type}" title="${titleText}">${count > 1 ? `${imgTag}&nbsp;x${count}` : imgTag}</div>`;
-                    }).join("");
+                    const localBadges = "";
                     
                     let goldHtmlPill = game.gold > 0 ? `<span class="pr-g-tix" style="color: #b8a87b; background: rgba(184, 168, 123, 0.1); border-color: rgba(184, 168, 123, 0.2); margin-right: 5px;"><img src="${baseUrl}BILET_GOLD.png" class="custom-icon"> ${game.gold}</span>` : '';
-                    gamesHtml += `<div class="pr-game-pill ${itemClass} ${isMineClass}" onclick="handleGameClick('${player.user}', ${slotIndex})"><div class="pr-g-top"><div class="pr-g-name-wrap"><span class="pr-g-name">${safeName}</span></div><div style="display:flex; align-items:center;">${goldHtmlPill}<span class="pr-g-tix"><img src="${baseUrl}BILET.png" class="custom-icon"> ${game.tickets || 0}</span></div></div><div class="pr-g-bottom"><div class="badges-mini-container">${globalBadge + localBadges}</div></div></div>`;
+                    gamesHtml += `<div class="pr-game-pill ${itemClass} ${isMineClass}" onclick="handleGameClick(&quot;${escapeHtml(player.user)}&quot;, ${slotIndex})"><div class="pr-g-top"><div class="pr-g-name-wrap"><span class="pr-g-name">${escapeHtml(safeName)}</span></div><div style="display:flex; align-items:center;">${goldHtmlPill}<span class="pr-g-tix"><img src="${baseUrl}BILET.png" class="custom-icon"> ${game.tickets || 0}</span></div></div><div class="pr-g-bottom"><div class="badges-mini-container">${globalBadge + localBadges}</div></div></div>`;
                 });
                 
                 playersGrid.innerHTML += `<div class="player-row"><div class="pr-user-info"><div class="pr-role-name"><span class="role-badge ${player.role ? player.role.toLowerCase() : 'f'}">${player.role || 'F'}</span><span class="pr-name" onclick="copyText(this, '${player.user}')" title="Скопировать никнейм">${player.user || "Зритель"}</span></div><div class="pr-total">Σ ${player.totalTickets} билетов</div></div><div class="pr-games" style="grid-template-columns: repeat(${globalMaxGames}, 1fr);">${gamesHtml}</div></div>`;
@@ -1002,13 +945,13 @@
             let html = "";
             sortedGames.forEach(game => {
                 let statusBadge = ""; let itemClass = "";
-                if (game.gold >= 100) { itemClass = "absolute"; statusBadge = `<div class="status-badge absolute">🛡️ НЕУЯЗВИМОСТЬ</div>`; } 
-                else if (game.gold >= 50) { itemClass = "immortal"; statusBadge = `<div class="status-badge immortal">💀 БЕССМЕРТИЕ</div>`; }
+                if (game.gold >= 100) { itemClass = "absolute"; statusBadge = `<div class="status-badge absolute">GOLD+</div>`; } 
+                else if (game.gold >= 50) { itemClass = "immortal"; statusBadge = `<div class="status-badge immortal">GOLD</div>`; }
                 let safeNameEscaped = game.rawName.replace(/'/g, "\\'").replace(/"/g, "&quot;");
                 let goldTickets = game.gold > 0 ? `<span style="color: #b8a87b; margin-right: 12px; display:flex; align-items:center;"><img src="${baseUrl}BILET_GOLD.png" class="custom-icon" style="margin-right: 4px;"> ${game.gold}</span>` : '';
                 let bottomRow = statusBadge ? `<div style="display: flex; justify-content: flex-end; align-items: center; margin-top: 5px;">${statusBadge}</div>` : '';
 
-                html += `<div class="cauldron-item ${itemClass}"><div class="c-top-row"><div class="c-game-name" onclick="copyText(this, '${safeNameEscaped}')" title="Скопировать название игры">${game.rawName}</div><div class="c-tickets" style="display:flex; align-items:center;">${goldTickets}<span style="display:flex; align-items:center;"><img src="${baseUrl}BILET.png" class="custom-icon" style="margin-right: 4px;"> ${game.tickets}</span></div></div>${bottomRow}</div>`;
+                html += `<div class="cauldron-item ${itemClass}"><div class="c-top-row"><div class="c-game-name" onclick="copyText(this, '${safeNameEscaped}')" title="Скопировать название игры">${escapeHtml(game.rawName)}</div><div class="c-tickets" style="display:flex; align-items:center;">${goldTickets}<span style="display:flex; align-items:center;"><img src="${baseUrl}BILET.png" class="custom-icon" style="margin-right: 4px;"> ${game.tickets}</span></div></div>${bottomRow}</div>`;
             });
             cauldronList.innerHTML = html;
         }
@@ -1021,9 +964,7 @@
             resultBox.classList.remove('show'); overlay.className = 'wheel-overlay active'; canvas.style.transform = `scale(1) rotate(0rad)`;
             
             let itemsRaw = []; let neonColor = "#8abf86"; 
-            if (spinData.action === "SPIN_BUFF_SUB") { itemsRaw = currentConfig.wheels.premium.buffs; overlay.classList.add('buff'); neonColor = "#a6e3a1"; } 
-            else if (spinData.action === "SPIN_DEBUFF_SUB") { itemsRaw = currentConfig.wheels.premium.debuffs; overlay.classList.add('debuff'); neonColor = "#eba0a0"; } 
-            else if (spinData.action === "SPIN_FREE_WHEEL") { itemsRaw = currentConfig.wheels.free.buffs; overlay.classList.add('free'); neonColor = "#b0b8a8"; }
+            if (spinData.action === "SPIN_FREE_WHEEL") { itemsRaw = currentConfig.wheels.free.buffs; overlay.classList.add('free'); neonColor = "#b0b8a8"; }
             
             const activeItems = itemsRaw.filter(i => i.active);
             if (activeItems.length === 0) { isSpinning = false; overlay.className = 'wheel-overlay'; return; }
