@@ -7,6 +7,9 @@
     <link rel="icon" type="image/png" href="https://skinnystreams04-ai.github.io/Auction/icons/BILET_GOLD.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Neucha&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared/site-header.css">
+    <script src="shared/site-header.js" defer></script>
+    <script src="shared/twitch-auth.js" defer></script>
 
     <style>
         /* ГЛОБАЛЬНЫЙ СТИЛЬ */
@@ -533,20 +536,17 @@
         window.currentTicketBalance = 0;
         let detectedRole = "F"; 
 
-        function loginTwitch() {
-            const authUrl = `https://id.twitch.tv/oauth2/authorize?client_id=${TWITCH_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=token&scope=user:read:subscriptions+user:write:chat&force_verify=true`;
-            window.location.href = authUrl;
-        }
+        function loginTwitch() { window.SkinwalkerTwitch.login(); }
 
         function logoutTwitch() {
-            localStorage.removeItem('tw_token');
+            window.SkinwalkerTwitch.clearToken();
             window.currentUserLogin = null; window.currentUserId = null; window.broadcasterId = null; window.currentGoldBalance = 0; window.currentTicketBalance = 0;
             document.getElementById('profile-auth').style.display = 'none';
             document.getElementById('profile-unauth').style.display = 'flex';
         }
 
         async function sendTwitchCommand(cmd) {
-            let token = localStorage.getItem('tw_token');
+            let token = window.SkinwalkerTwitch.getToken();
             if(!token || !window.currentUserId || !window.broadcasterId) { showToast('Сначала войди через Twitch!', true); return; }
             try {
                 const response = await fetch('https://api.twitch.tv/helix/chat/messages', {
@@ -646,14 +646,7 @@
         }
 
         async function checkTwitchAuth() {
-            let token = localStorage.getItem('tw_token');
-            const hash = window.location.hash;
-            if (hash && hash.includes('access_token=')) {
-                const params = new URLSearchParams(hash.substring(1));
-                token = params.get('access_token');
-                localStorage.setItem('tw_token', token);
-                window.history.replaceState(null, null, window.location.pathname); 
-            }
+            let token = window.SkinwalkerTwitch.consumeRedirectToken();
 
             if (token) {
                 try {
